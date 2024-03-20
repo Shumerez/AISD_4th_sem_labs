@@ -11,6 +11,9 @@ def tetra_solve(a = 'error', b = 'error', c = 'error', testing_mode = False):
         except ValueError:
             print("Введите число, будьте человеком") if not testing_mode else False 
             return False
+        if (a == a + 1) or (b == b + 1) or (c == c + 1):
+            print("Один из коэффициентов выходит за рамки допустимых значений типа float") if not testing_mode else False 
+            return False
 
     if (a == 0):
         if (b == 0):
@@ -62,7 +65,7 @@ def tetra_solve(a = 'error', b = 'error', c = 'error', testing_mode = False):
             # Если дискриминант равен нулю, то квадратное уравнение имеет два кратных (одинаковых) действительных корня
             # Обозначим их как x1 = x2 = x
             # И найдем по стандартной формуле для кратных корней квадратного уравнения, представленной ниже
-            print("D == 0") if not testing_mode else False
+            #print("D == 0") if not testing_mode else False
             x = (-b) / (2*a)
             print("%.4f" % x) if not testing_mode else False
             return {x}
@@ -71,7 +74,7 @@ def tetra_solve(a = 'error', b = 'error', c = 'error', testing_mode = False):
             # Если дискриминант меньше нуля, то квадратное уравнение имеет два мнимых корня
             # В рамках нашего алгоритма мы не занимаемся их вычислением
             # И найдем по стандартной формуле для кратных корней квадратного уравнения, представленной ниже
-            print('a > 10') if not testing_mode else False
+            #print('a > 10') if not testing_mode else False
             print("нет действительных корней") if not testing_mode else False
             return {}
 
@@ -88,43 +91,61 @@ elif mode == 'T':
     # Если дискриминант больше нуля, то квадратное уравнение имеет два различных действительных корня
     # Обозначим их как x1 и x2
     # И найдем по стандартным формулам для корней квадратного уравнения, представленным ниже
+    print("Тест D > 0")
+    print("""assert {} == tetra_solve(3, -4, 94, testing_mode = True)""")
     assert {} == tetra_solve(3, -4, 94, testing_mode = True)
-    print("Тест D > 0 успешен")
+    print({} == tetra_solve(3, -4, 94, testing_mode = True))
+    print("Тест D > 0 успешен\n")
 
     # Случай D == 0
     # Если дискриминант равен нулю, то квадратное уравнение имеет два кратных (одинаковых) действительных корня
     # Обозначим их как x1 = x2 = x
     # И найдем по стандартной формуле для кратных корней квадратного уравнения, представленной ниже
+    print("Тест D == 0")
+    print("""assert {3.5} == tetra_solve(-4, 28, -49, testing_mode = True)""")
     assert {3.5} == tetra_solve(-4, 28, -49, testing_mode = True)
-    print("Тест D == 0 успешен")
+    print({3.5} == tetra_solve(-4, 28, -49, testing_mode = True))
+    print("Тест D == 0 успешен\n")
 
     # Случай D < 0
     # Если дискриминант меньше нуля, то квадратное уравнение имеет два мнимых корня
     # В рамках нашего алгоритма мы не занимаемся их вычислением
     # И найдем по стандартной формуле для кратных корней квадратного уравнения, представленной ниже
+    print("Тест D < 0")
+    print("""assert {3, -3} == tetra_solve(-6, 0, 54, testing_mode = True)""")
     assert {3, -3} == tetra_solve(-6, 0, 54, testing_mode = True)
-    print("Тест D < 0 успешен")
+    print({3, -3} == tetra_solve(-6, 0, 54, testing_mode = True))
+    print("Тест D < 0 успешен\n")
 
     # Случай a == 0 И b == 0 И с == 0.
     # Если все коэффициенты == 0, то уравнение обращается в 
     # 0 = 0
     # Следовательно, уравнение верно при любых x
+    print("Тест a == 0 И b == 0 И с == 0")
+    print("""assert True == tetra_solve(0, 0, 0, testing_mode = True)""")
     assert True == tetra_solve(0, 0, 0, testing_mode = True)
-    print("Тест a = 0, b = 0, c = 0 успешен")
+    print(True == tetra_solve(0, 0, 0, testing_mode = True))
+    print("Тест a = 0, b = 0, c = 0 успешен\n")
 
     # Случай a == 0 И b == 0 И с != 0.
     # Если коэффициенты при x == 0, а c != 0, то уравнение обращается в 
     # с = 0, где с != 0
     # Следовательно, уравнение ложно при любых x
+    print("Тест a == 0 И b == 0 И с != 0")
+    print("""assert {} == tetra_solve(0, 0, 4, testing_mode = True)""")
     assert {} == tetra_solve(0, 0, 4, testing_mode = True)
-    print("Тест a == 0, b == 0, с != 0 успешен")
+    print({} == tetra_solve(0, 0, 4, testing_mode = True))
+    print("Тест a == 0, b == 0, с != 0 успешен\n")
 
     # Случай a == 0 И b != 0 И с - любое
     # Если коэффициент при x^2 == 0, а b != 0, то уравнение обращается в линейное
     # bx + c = 0, где b != 0
     # Следовательно, решим линейное уравнение с помощью формулы
     # x =  -c / b
+    print("Тест a == 0 И b != 0 И с - любое")
+    print("""assert {-2} == tetra_solve(0, 4, 8, testing_mode = True)""")
     assert {-2} == tetra_solve(0, 4, 8, testing_mode = True)
-    print("Тест линейного уравнения успешен")
+    print({-2} == tetra_solve(0, 4, 8, testing_mode = True))
+    print("Тест линейного уравнения успешен\n")
 else:
     print("Нет такого режима")
