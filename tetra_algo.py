@@ -56,7 +56,6 @@ def tetra_solve(a = 'error', b = 'error', c = 'error', testing_mode = False):
             # И найдем по стандартным формулам для корней квадратного уравнения, представленным ниже
             x1 = ( -b + math.sqrt(D) ) / (2*a) # float x1 - первый корень квадратного уравнения
             x2 = ( -b - math.sqrt(D) ) / (2*a) # float x2 - второй корень квадратного уравнения
-            print("D > 0") if not testing_mode else False
             print("%.4f" % x1) if not testing_mode else False
             print("%.4f" % x2) if not testing_mode else False
             return {x1, x2}
@@ -92,9 +91,9 @@ elif mode == 'T':
     # Обозначим их как x1 и x2
     # И найдем по стандартным формулам для корней квадратного уравнения, представленным ниже
     print("Тест D > 0")
-    print("""assert {} == tetra_solve(3, -4, 94, testing_mode = True)""")
-    assert {} == tetra_solve(3, -4, 94, testing_mode = True)
-    print({} == tetra_solve(3, -4, 94, testing_mode = True))
+    print("""assert {3, -3} == tetra_solve(-6, 0, 54, testing_mode = True)""")
+    assert {3, -3} == tetra_solve(-6, 0, 54, testing_mode = True)
+    print({3, -3} == tetra_solve(-6, 0, 54, testing_mode = True))
     print("Тест D > 0 успешен\n")
 
     # Случай D == 0
@@ -112,9 +111,9 @@ elif mode == 'T':
     # В рамках нашего алгоритма мы не занимаемся их вычислением
     # И найдем по стандартной формуле для кратных корней квадратного уравнения, представленной ниже
     print("Тест D < 0")
-    print("""assert {3, -3} == tetra_solve(-6, 0, 54, testing_mode = True)""")
-    assert {3, -3} == tetra_solve(-6, 0, 54, testing_mode = True)
-    print({3, -3} == tetra_solve(-6, 0, 54, testing_mode = True))
+    print("""assert {} == tetra_solve(3, -4, 94, testing_mode = True)""")
+    assert {} == tetra_solve(3, -4, 94, testing_mode = True)
+    print({} == tetra_solve(3, -4, 94, testing_mode = True))
     print("Тест D < 0 успешен\n")
 
     # Случай a == 0 И b == 0 И с == 0.
