@@ -55,7 +55,7 @@ def tetra_solve(a = 'error', b = 'error', c = 'error', testing_mode = False):
             # Обозначим их как x1 и x2
             # И найдем по стандартным формулам для корней квадратного уравнения, представленным ниже
             x1 = ( -b + math.sqrt(D) ) / (2*a) # float x1 - первый корень квадратного уравнения
-            x2 = ( -b - math.sqrt(D) ) / (2*a) # float x2 - второй корень квадратного уравнения
+            x2 = ( -b - math.sqrt(D) ) / (2*a) # float x2 - второй корень квадратного уравненияч
             print("%.4f" % x1) if not testing_mode else False
             print("%.4f" % x2) if not testing_mode else False
             return {x1, x2}
