@@ -55,7 +55,7 @@ def sortMonteCarlo(input_filename = filenameForTest3, output_filename = filename
 # Небольшая функция, проверяющая сортировку массива за O(N)
 def isSorted(array):
 	for i in range(len(array) - 1):
-		if array[i] < array[i + 1]:
+		if array[i] > array[i + 1]:
 			return False
 	return True
 
