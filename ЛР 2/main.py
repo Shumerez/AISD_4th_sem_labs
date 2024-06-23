@@ -34,7 +34,7 @@ class Deque:
             return self._higher_stack.pop
         except IndexError:
             if len(self._lower_stack) == 0:
-                print("ОШИБКА ОБРАБОТАНА: pop from _lower empty stack")
+                print("ОШИБКА ОБРАБОТАНА: pop from _higher empty stack")
                 return
             else:
                 # Переложить половину нижнего стека в верхний стек
@@ -108,9 +108,6 @@ def input_and_validity_check(input_filename=filenameForTest3, output_filename=fi
     #     if (float(str_number) == float(str_number) + 1):
     #         print("ОШИБКА: Файл содержит числа, превышающие размер типа данных float")
     #         return
-
-
-
 
 def __main__():
     input_and_validity_check(input_filename=r'C:\Users\Gregory\Documents\GitHub\AISD_4th_sem_labs\ЛР 2\test.txt')
