@@ -38,14 +38,22 @@ class Deque:
 coordinate_pairs = Deque()
 
 # Открываем файл для чтения пар координат
-with open('test.txt', 'r') as file:
+with open('C:\\Users\\gregory.gachko\\Documents\\GitHub\\casadera-new\\ЛР 2', 'r') as file:
     # Проходим по каждой строке в файле
     for line in file:
         # Разделяем строку на значения x и y
-        x_str, y_str = line.strip().split()
+        try:
+            x_str, y_str = line.strip().split()
+        except:
+            print("Входные данные идут не парами")
+            exit()
         # Преобразуем строки в числа с плавающей запятой
-        x = float(x_str)
-        y = float(y_str)
+        try:
+            x = float(x_str)
+            y = float(y_str)
+        except:
+            print("Входные данные не конвертируются в тип float")
+            exit()
         # Добавляем пару координат в дек с помощью PushBack
         coordinate_pairs.PushBack((x, y))
 
@@ -138,7 +146,7 @@ def interpolate(x0, y0, x1, y1, x):
 def gauss_legendre_integration(x0, y0, x1, y1):
     # Число точек для квадратуры Гаусса-Лежандра
     n = 2
-    # Узлы для 2-точечной квадратуры Гаусса-Лежандра на интервале [-1, 1]
+    # Узлы для 2-точечной квадратуры Гаусса-Лежандра на интервале [-1, 1] (корни полинома Лежандра)
     nodes = [-1.0 / math.sqrt(3), 1.0 / math.sqrt(3)]
     # Веса для 2-точечной квадратуры Гаусса-Лежандра
     weights = [1.0, 1.0]
