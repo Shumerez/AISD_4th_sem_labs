@@ -1,0 +1,31 @@
+digraph ProgramFlow {
+    node [shape=rectangle];
+
+    Start [label="Начало"];
+    InitDeque [label="Инициализация дека"];
+    ReadCoords [label="Чтение координат из файла\nи добавление в дек"];
+    CheckEmpty [label="Дек пустой?"];
+    NotEnough [label="Недостаточно точек"];
+    CombSort [label="Сортировка дека\nметодом расчёски"];
+    InitIntegral [label="total_integral = 0"];
+    WhileNotEmpty [label="Пока дек не пуст"];
+    PopFront [label="Извлечь x0, y0"];
+    CheckNext [label="Есть следующая точка?"];
+    GetNext [label="Получить x1, y1"];
+    Integrate [label="Вычислить интеграл\nна интервале [x0, x1]"];
+    Accumulate [label="Накопить total_integral"];
+    ReturnItems [label="Вернуть элементы в дек"];
+    OutputResult [label="Вывести total_integral"];
+    End [label="Конец"];
+
+    Start -> InitDeque -> ReadCoords -> CheckEmpty;
+    CheckEmpty -> NotEnough [label="Да"];
+    NotEnough -> End;
+    CheckEmpty -> CombSort [label="Нет"];
+    CombSort -> InitIntegral -> WhileNotEmpty;
+    WhileNotEmpty -> PopFront -> CheckNext;
+    CheckNext -> ReturnItems [label="Нет"];
+    CheckNext -> GetNext [label="Да"];
+    GetNext -> Integrate -> Accumulate -> WhileNotEmpty;
+    ReturnItems -> OutputResult -> End;
+}

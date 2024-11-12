@@ -1,0 +1,26 @@
+digraph ProgramFlow {
+    node [shape=rectangle];
+
+    Start [label="Начало"];
+    InitQueue [label="Инициализация кольцевой очереди"];
+    ReadCoords [label="Чтение координат из файла\nи добавление в очередь"];
+    CheckSize [label="Размер очереди < 2?"];
+    NotEnough [label="Недостаточно точек для интегрирования"];
+    CombSort [label="Сортировка очереди методом расчёски"];
+    InitIntegral [label="total_integral = 0"];
+    ForEachPair [label="Для каждой пары соседних точек"];
+    Integrate [label="Вычисление интеграла\nметодом Гаусса-Лежандра"];
+    Accumulate [label="Накопление total_integral"];
+    OutputResults [label="Вывод результата\nинтеграла и операций"];
+    End [label="Конец"];
+
+    Start -> InitQueue -> ReadCoords -> CheckSize;
+    CheckSize -> NotEnough [label="Да"];
+    NotEnough -> End;
+    CheckSize -> CombSort [label="Нет"];
+    CombSort -> InitIntegral -> ForEachPair;
+    ForEachPair -> Integrate -> Accumulate;
+    Accumulate -> ForEachPair [label="Повторять, пока\nне пройдены все пары"];
+    ForEachPair -> OutputResults [label="После завершения"];
+    OutputResults -> End;
+}

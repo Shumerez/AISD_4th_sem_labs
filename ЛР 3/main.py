@@ -177,18 +177,31 @@ coordinate_queue = CircularQueue()
 # Счетчик элементарных операций
 operation_count = 0
 
+# param for uniq X check
+uniq_X = []
 # Открываем файл для чтения
 with open('/home/every/dev/AISD_4th_sem_labs/ЛР 3/test.txt', 'r') as file:
     # Проходим по каждой строке файла
     for line in file:
         # Разбиваем строку на x и y
-        x_str, y_str = line.strip().split()
-        # Преобразуем строки в числа
-        x = float(x_str)
-        y = float(y_str)
+        try:
+            x_str, y_str = line.strip().split()
+
+            # Преобразуем строки в числа
+            x = float(x_str)
+            uniq_X.append(x)
+            y = float(y_str)
+        except:
+            print("Входные данные не соответствуют формату")
+            exit()
         # Добавляем пару (x, y) в очередь
         coordinate_queue.enqueue((x, y))
         operation_count += 1  # Операция добавления
+
+set_uniq_X = set(uniq_X)
+if len(uniq_X) != len(set_uniq_X):
+    print("В вашем массиве координат есть некорректные значения")
+    exit()
 
 # Выполняем сортировку расчёской и получаем количество операций
 sort_operations = comb_sort(coordinate_queue)
@@ -221,4 +234,4 @@ else:
 # Выводим общий интеграл
 print("Интеграл равен:", total_integral)
 # Выводим количество элементарных операций
-print("Количество элементарных операций:", operation_count + integration_operations)
+#print("Количество элементарных операций:", operation_count + integration_operations)
