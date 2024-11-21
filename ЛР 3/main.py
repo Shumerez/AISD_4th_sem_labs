@@ -1,201 +1,224 @@
 import math
 
-# Определяем класс Deque для реализации структуры данных дек
-class Deque:
+# Определяем класс узла для связного списка
+class Node:
+    def __init__(self, data):
+        # Данные, хранящиеся в узле (пара координат)
+        self.data = data
+        # Ссылка на следующий узел
+        self.next = None
+
+# Определяем класс кольцевой очереди на базе связного списка
+class CircularQueue:
     def __init__(self):
-        # Внутренний список для хранения элементов дека
-        self.items = []
-    
-    def PushBack(self, item):
-        # Добавляем элемент в конец дека
-        self.items.append(item)
-    
-    def PushFront(self, item):
-        # Добавляем элемент в начало дека
-        self.items.insert(0, item)
-    
-    def PopBack(self):
-        # Удаляем и возвращаем элемент из конца дека
-        if self.IsEmpty():
-            raise IndexError("PopBack from empty Deque")
-        return self.items.pop()
-    
-    def PopFront(self):
-        # Удаляем и возвращаем элемент из начала дека
-        if self.IsEmpty():
-            raise IndexError("PopFront from empty Deque")
-        return self.items.pop(0)
-    
-    def IsEmpty(self):
-        # Проверяем, пуст ли дек
-        return len(self.items) == 0
-    
-    def Clear(self):
-        # Очищаем дек
-        self.items = []
+        # Указатель на последний узел в очереди
+        self.tail = None
+        # Количество элементов в очереди
+        self.size = 0
 
-# Инициализируем дек для хранения пар координат
-coordinate_pairs = Deque()
+    def enqueue(self, data):
+        # Создаем новый узел с данными
+        new_node = Node(data)
+        # Если очередь пуста
+        if self.tail is None:
+            # Новый узел указывает на себя, образуя кольцо
+            new_node.next = new_node
+            # Устанавливаем tail на новый узел
+            self.tail = new_node
+        else:
+            # Вставляем новый узел после tail и обновляем tail
+            new_node.next = self.tail.next
+            self.tail.next = new_node
+            self.tail = new_node
+        # Увеличиваем размер очереди
+        self.size += 1
 
-# Открываем файл для чтения пар координат
-with open('test.txt', 'r') as file:
-    # Проходим по каждой строке в файле
-    for line in file:
-        # Разделяем строку на значения x и y
-        try:
-            x_str, y_str = line.strip().split()
-        except:
-            print("Входные данные идут не парами")
-            exit()
-        # Преобразуем строки в числа с плавающей запятой
-        try:
-            x = float(x_str)
-            y = float(y_str)
-        except:
-            print("Входные данные не конвертируются в тип float")
-            exit()
-        # Добавляем пару координат в дек с помощью PushBack
-        coordinate_pairs.PushBack((x, y))
+    def is_empty(self):
+        # Проверяем, пуста ли очередь
+        return self.tail is None
 
-def comb_sort(deque):
-    # Инициализируем переменную для хранения длины дека
-    size = 0
-    # Копируем элементы дека в список для вычисления длины
-    temp_deque = Deque()
-    while not deque.IsEmpty():
-        # Перемещаем элементы в временный дек и увеличиваем счетчик
-        temp_deque.PushBack(deque.PopFront())
-        size += 1
-    # Возвращаем элементы обратно в исходный дек
-    while not temp_deque.IsEmpty():
-        deque.PushBack(temp_deque.PopFront())
-    
-    # Инициализируем переменные для сортировки
-    gap = size  # Размер шага
-    shrink = 1.3  # Коэффициент уменьшения шага
-    sorted = False  # Флаг для отслеживания состояния сортировки
+    def clear(self):
+        # Очищаем очередь
+        self.tail = None
+        self.size = 0
+
+    def __len__(self):
+        # Возвращаем размер очереди
+        return self.size
+
+# Функция сортировки расчёской над кольцевой очередью
+def comb_sort(queue):
+    # Инициализируем количество элементарных операций
+    operation_count = 0
+    # Инициализируем размер шага
+    gap = queue.size
+    operation_count += 1  # Присваивание
+    # Инициализируем коэффициент уменьшения шага
+    shrink = 1.3
+    operation_count += 1  # Присваивание
+    # Флаг для отслеживания состояния сортировки
+    sorted = False
+    operation_count += 1  # Присваивание
 
     # Цикл продолжается, пока список не будет отсортирован
     while not sorted:
-        # Обновляем значение шага
+        operation_count += 1  # Проверка условия цикла
+        # Обновляем размер шага
         gap = int(gap / shrink)
+        operation_count += 1  # Операция деления и присваивания
+        # Если шаг меньше 1, устанавливаем его равным 1
         if gap <= 1:
-            # Устанавливаем минимальный шаг равным 1
             gap = 1
-            # Предполагаем, что это последний проход
+            operation_count += 1  # Присваивание
             sorted = True
-        # Инициализируем индексы для обхода дека
-        index = 0
-        while True:
-            # Инициализируем временные деки для доступа к элементам по индексам
-            front_deque = Deque()
-            back_deque = Deque()
-            # Перемещаем элементы из исходного дека в front_deque до индекса index
-            for _ in range(index):
-                if deque.IsEmpty():
-                    break
-                front_deque.PushBack(deque.PopFront())
-            # Получаем первый элемент для сравнения
-            if deque.IsEmpty():
-                break
-            first_item = deque.PopFront()
-            # Перемещаем элементы в back_deque до элемента с индексом index + gap
-            for _ in range(gap - 1):
-                if deque.IsEmpty():
-                    break
-                back_deque.PushBack(deque.PopFront())
-            # Проверяем, есть ли второй элемент для сравнения
-            if deque.IsEmpty():
-                # Возвращаем все элементы обратно
-                front_deque.PushBack(first_item)
-                while not back_deque.IsEmpty():
-                    front_deque.PushBack(back_deque.PopFront())
-                while not front_deque.IsEmpty():
-                    deque.PushFront(front_deque.PopBack())
-                break
-            second_item = deque.PopFront()
-            # Сравниваем элементы по x-координате
-            if first_item[0] > second_item[0]:
-                # Меняем элементы местами
-                deque.PushFront(first_item)
-                back_deque.PushBack(second_item)
+            operation_count += 1  # Присваивание
+        # Инициализируем текущий узел
+        current = queue.tail.next  # Начало очереди
+        operation_count += 1  # Присваивание
+        # Инициализируем индекс
+        i = 0
+        operation_count += 1  # Присваивание
+
+        # Выполняем проход по очереди с текущим шагом
+        while i + gap < queue.size:
+            operation_count += 1  # Проверка условия цикла
+            # Инициализируем узлы для сравнения
+            node_i = current
+            operation_count += 1  # Присваивание
+            node_j = current
+            operation_count += 1  # Присваивание
+            # Перемещаемся на gap позиций от текущего узла
+            for _ in range(gap):
+                node_j = node_j.next
+                operation_count += 1  # Операция перехода к следующему узлу
+            # Сравниваем данные узлов по x-координате
+            if node_i.data[0] > node_j.data[0]:
+                operation_count += 1  # Операция сравнения
+                # Обмениваем данные узлов
+                node_i.data, node_j.data = node_j.data, node_i.data
+                operation_count += 3  # Три операции присваивания
+                # Так как произошел обмен, устанавливаем sorted в False
                 sorted = False
-            else:
-                deque.PushFront(second_item)
-                back_deque.PushBack(first_item)
-            # Возвращаем элементы обратно в исходный дек
-            while not back_deque.IsEmpty():
-                deque.PushFront(back_deque.PopBack())
-            while not front_deque.IsEmpty():
-                deque.PushFront(front_deque.PopBack())
+                operation_count += 1  # Присваивание
+            # Переходим к следующему узлу
+            current = current.next
+            operation_count += 1  # Присваивание
             # Увеличиваем индекс
-            index += 1
-            if index + gap >= size:
-                break
+            i += 1
+            operation_count += 1  # Присваивание
 
-# Сортируем пары координат методом расчески
-comb_sort(coordinate_pairs)
+        # Дополнительная проверка для случая, когда gap равен 1
+        # и последний элемент может быть не на своем месте
+        operation_count += 1  # Проверка условия
+        if gap == 1:
+            # Проходим оставшиеся элементы
+            operation_count += 1  # Присваивание
+            current = queue.tail.next
+            operation_count += 1  # Присваивание
+            for _ in range(queue.size - 1):
+                operation_count += 1  # Цикл for
+                next_node = current.next
+                operation_count += 1  # Присваивание
+                # Сравниваем текущий и следующий узлы
+                if current.data[0] > next_node.data[0]:
+                    operation_count += 1  # Операция сравнения
+                    # Обмениваем данные узлов
+                    current.data, next_node.data = next_node.data, current.data
+                    operation_count += 3  # Три операции присваивания
+                    # Устанавливаем sorted в False
+                    sorted = False
+                    operation_count += 1  # Присваивание
+                # Переходим к следующему узлу
+                current = next_node
+                operation_count += 1  # Присваивание
 
+    # Возвращаем количество элементарных операций
+    return operation_count
+
+# Функция линейной интерполяции
 def interpolate(x0, y0, x1, y1, x):
-    # Вычисляем наклон линии между двумя точками
-    try:
-        m = (y1 - y0) / (x1 - x0)
-    except ZeroDivisionError:
-        # print("Деление на ноль!")
-        m = y1 - y0
-    # Вычисляем интерполированное значение y в точке x
+    # Вычисляем наклон прямой
+    m = (y1 - y0) / (x1 - x0) if x1 != x0 else 0.0
+    # Вычисляем значение y в точке x
     y = y0 + m * (x - x0)
     return y
 
+# Функция интегрирования методом Гаусса-Лежандра
 def gauss_legendre_integration(x0, y0, x1, y1):
-    # Число точек для квадратуры Гаусса-Лежандра
+    # Число точек для квадратуры
     n = 2
-    # Узлы для 2-точечной квадратуры Гаусса-Лежандра на интервале [-1, 1] (корни полинома Лежандра)
+    # Узлы и веса для 2-точечной квадратуры на [-1, 1]
     nodes = [-1.0 / math.sqrt(3), 1.0 / math.sqrt(3)]
-    # Веса для 2-точечной квадратуры Гаусса-Лежандра
     weights = [1.0, 1.0]
-    # Половина длины интервала интегрирования
+    # Половина длины интервала
     dx = (x1 - x0) / 2.0
-    # Середина интервала интегрирования
+    # Середина интервала
     xm = (x1 + x0) / 2.0
-    # Инициализируем интеграл для текущего интервала
+    # Инициализируем интеграл
     integral = 0.0
     # Проходим по узлам квадратуры
     for i in range(n):
-        # Преобразуем узел из интервала [-1, 1] в [x0, x1]
+        # Преобразуем узел к интервалу [x0, x1]
         xi = xm + dx * nodes[i]
-        # Интерполируем значение y в точке xi
+        # Если x1 == x0, устанавливаем xi = x0, чтобы избежать деления на ноль
+        if x1 == x0:
+            xi = x0
+        # Вычисляем yi с помощью интерполяции
         yi = interpolate(x0, y0, x1, y1, xi)
-        # Добавляем взвешенное значение функции к интегралу
+        # Добавляем вклад в интеграл
         integral += weights[i] * yi
-    # Умножаем на dx для получения значения интеграла на интервале
+    # Умножаем на dx для получения итогового интеграла
     integral *= dx
     return integral
 
-# Инициализируем общий интеграл равным нулю
+# Инициализируем кольцевую очередь
+coordinate_queue = CircularQueue()
+
+# Счетчик элементарных операций
+operation_count = 0
+
+# Открываем файл для чтения
+with open('/home/every/dev/AISD_4th_sem_labs/ЛР 3/test.txt', 'r') as file:
+    # Проходим по каждой строке файла
+    for line in file:
+        # Разбиваем строку на x и y
+        x_str, y_str = line.strip().split()
+        # Преобразуем строки в числа
+        x = float(x_str)
+        y = float(y_str)
+        # Добавляем пару (x, y) в очередь
+        coordinate_queue.enqueue((x, y))
+        operation_count += 1  # Операция добавления
+
+# Выполняем сортировку расчёской и получаем количество операций
+sort_operations = comb_sort(coordinate_queue)
+operation_count += sort_operations
+
+# Инициализируем общий интеграл
 total_integral = 0.0
+# Инициализируем счетчик операций для интегрирования
+integration_operations = 0
 
-# Создаем временный дек для обхода coordinate_pairs
-temp_deque = Deque()
-
-# Проходим по парам координат для вычисления интеграла на каждом интервале
-while not coordinate_pairs.IsEmpty():
-    # Получаем начальную точку интервала
-    x0, y0 = coordinate_pairs.PopFront()
-    # Копируем начальную точку в temp_deque для последующего использования
-    temp_deque.PushBack((x0, y0))
-    # Проверяем, есть ли следующая точка
-    if not coordinate_pairs.IsEmpty():
-        # Получаем конечную точку интервала
-        x1, y1 = coordinate_pairs.items[0]  # Используем прямой доступ к первому элементу
-        # Вычисляем интеграл на текущем интервале методом Гаусса-Лежандра
+# Проверяем, что в очереди достаточно элементов для интегрирования
+if coordinate_queue.size < 2:
+    print("Недостаточно точек для интегрирования.")
+else:
+    # Начинаем с головы очереди
+    current = coordinate_queue.tail.next
+    # Проходим по всем узлам
+    for _ in range(coordinate_queue.size - 1):
+        # Получаем текущие точки
+        x0, y0 = current.data
+        x1, y1 = current.next.data
+        # Вычисляем интеграл на текущем интервале
         integral = gauss_legendre_integration(x0, y0, x1, y1)
-        # Добавляем вычисленный интеграл к общему интегралу
+        # Добавляем к общему интегралу
         total_integral += integral
+        integration_operations += 1  # Считаем как одну операцию на интервал
+        # Переходим к следующему узлу
+        current = current.next
 
-# Возвращаем элементы обратно в coordinate_pairs
-while not temp_deque.IsEmpty():
-    coordinate_pairs.PushFront(temp_deque.PopBack())
-
-# Выводим общий вычисленный интеграл
+# Выводим общий интеграл
 print("Интеграл равен:", total_integral)
+# Выводим количество элементарных операций
+print("Количество элементарных операций:", operation_count + integration_operations)
