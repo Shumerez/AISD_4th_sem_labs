@@ -1,0 +1,125 @@
+digraph ProgramFlow {
+    rankdir=TB;
+    node [shape=rectangle, style=filled, fillcolor=lightyellow];
+
+    Start [label="Начало программы"];
+
+    // Инициализация очереди
+    InitQueue [label="Инициализация пустой очереди my_coords"];
+
+    // Чтение данных из файла
+    OpenFile [label="Открытие файла 'test.txt' для чтения"];
+    ReadLine [label="Чтение строки из файла"];
+    CheckEOF [label="Конец файла?"];
+    ProcessLine [label="Обработка строки"];
+    IsLineEmpty [label="Строка пустая?"];
+    SplitLine [label="Разделение строки на числа"];
+    IsTwoNumbers [label="Ровно два числа?"];
+    TryParse [label="Преобразование в числа x и y"];
+    ParseError [label="Ошибка преобразования\nПропустить строку"];
+    AddToQueue [label="Добавление [x, y] в очередь"];
+    SkipLine [label="Пропустить строку"];
+
+    // Сортировка очереди
+    CombSort [label="Сортировка очереди методом расчёски"];
+    InitSort [label="Инициализация параметров сортировки"];
+    GapLoop [label="Gap > 1 или not sorted?"];
+    InnerLoop [label="i + gap < размер очереди"];
+    CompareSwap [label="Сравнение и обмен элементов"];
+    IncrementI [label="i = i + 1"];
+
+    // Построение красно-черного дерева
+    InitRBTree [label="Создание пустого красно-черного дерева rb_tree"];
+    InsertLoop [label="Вставка каждого элемента из очереди в дерево"];
+    InsertNode [label="Вставка узла и балансировка дерева"];
+
+    // Визуализация дерева
+    VisualizeTree [label="Визуализация дерева с помощью Graphviz"];
+
+    // Интерполяция полиномом Лагранжа
+    Interpolation [label="Создание полинома Лагранжа\ninterp_polynomial"];
+
+    // Вычисление интеграла методом Гаусса
+    GaussIntegration [label="Вычисление интеграла методом Гаусса"];
+    SetLimits [label="Установка пределов интегрирования"];
+    GaussLoop [label="Для каждого узла Гаусса"];
+    ComputeValue [label="Вычисление значения интеграла"];
+    SumIntegral [label="Обновление суммы интеграла"];
+
+    // Завершение программы
+    End [label="Конец программы"];
+
+    // Соединения
+    Start -> InitQueue -> OpenFile -> ReadLine;
+    ReadLine -> CheckEOF;
+    CheckEOF -> ProcessLine [label="Нет"];
+    CheckEOF -> CombSort [label="Да"];
+
+    ProcessLine -> IsLineEmpty;
+    IsLineEmpty -> ReadLine [label="Да"];
+    IsLineEmpty -> SplitLine [label="Нет"];
+
+    SplitLine -> IsTwoNumbers;
+    IsTwoNumbers -> TryParse [label="Да"];
+    IsTwoNumbers -> SkipLine [label="Нет"];
+
+    TryParse -> AddToQueue [label="Успешно"];
+    TryParse -> ParseError [label="Ошибка"];
+    ParseError -> ReadLine;
+    SkipLine -> ReadLine;
+    AddToQueue -> ReadLine;
+
+    // Сортировка
+    CombSort -> InitSort -> GapLoop;
+    GapLoop -> InnerLoop [label="Да"];
+    GapLoop -> InitRBTree [label="Нет"];
+
+    InnerLoop -> CompareSwap -> IncrementI -> InnerLoop;
+    InnerLoop -> GapLoop [label="Нет"];
+
+    // Построение дерева
+    InitRBTree -> InsertLoop;
+    InsertLoop -> InsertNode -> InsertLoop [label="Есть элементы"];
+    InsertLoop -> VisualizeTree [label="Нет элементов"];
+
+    // Интерполяция и интегрирование
+    VisualizeTree -> Interpolation -> GaussIntegration;
+    GaussIntegration -> SetLimits -> GaussLoop;
+    GaussLoop -> ComputeValue -> SumIntegral -> GaussLoop [label="Следующий узел"];
+    GaussLoop -> End [label="Все узлы обработаны"];
+
+    // Обозначение циклов
+    {rank = same; GapLoop; InnerLoop; IncrementI;}
+    {rank = same; InsertLoop; InsertNode;}
+    {rank = same; GaussLoop; ComputeValue; SumIntegral;}
+
+    // Условные узлы
+    node [shape=diamond, style=filled, fillcolor=lightblue];
+    CheckEOF;
+    IsLineEmpty;
+    IsTwoNumbers;
+    TryParse;
+    GapLoop;
+    InnerLoop;
+
+    // Действия
+    node [shape=rectangle, style=filled, fillcolor=lightyellow];
+    ProcessLine;
+    SkipLine;
+    ParseError;
+    AddToQueue;
+    CompareSwap;
+    IncrementI;
+    InsertNode;
+    VisualizeTree;
+    Interpolation;
+    GaussIntegration;
+    SetLimits;
+    ComputeValue;
+    SumIntegral;
+
+    // Начало и конец
+    node [shape=oval, style=filled, fillcolor=lightgreen];
+    Start;
+    End;
+}
