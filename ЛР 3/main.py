@@ -167,7 +167,7 @@ operation_count = 0
 # param for uniq X check
 uniq_X = []
 # Открываем файл для чтения
-with open('/home/every/dev/AISD_4th_sem_labs/ЛР 3/test.txt', 'r') as file:
+with open('test.txt', 'r') as file:
     # Проходим по каждой строке файла
     for line in file:
         # Разбиваем строку на x и y
